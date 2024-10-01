@@ -20,19 +20,19 @@ if response.status_code == 200:
         title = job.find("h1").text.strip()  # Titre de l'offre
         location = job.find("span", class_="info").text.strip()  # Localisation
         
-        # Rechercher le nom de l'entreprise et gérer le cas où il n'est pas trouvé
-        company = job.find("h2")  # Nom de l'entreprise
-        if company:  # Vérifie si l'élément existe
-            company = company.text.strip()
+        # Rechercher le nom de l'entreprise via la classe "i-company"
+        company_tag = job.find("i", class_="i-company")
+        if company_tag:
+            company = company_tag.find_next_sibling(text=True).strip()
         else:
-            company = "Non spécifié"  # Valeur par défaut si non trouvé
+            company = "Non spécifié"  # Si l'entreprise n'est pas trouvée
 
-        # Trouver la description, gérer également le cas où elle n'est pas trouvée
-        description = job.find("div", class_="description")
-        if description:  # Vérifie si l'élément existe
-            description = description.text.strip()
+        # Rechercher la description spécifique dans <p class="detail">
+        description = job.find("p", class_="detail")
+        if description:
+            description = description.text.strip()  # Récupérer la description complète
         else:
-            description = "Non spécifiée"  # Valeur par défaut si non trouvé
+            description = "Non spécifiée"  # Valeur par défaut si non trouvée
         
         # Afficher les résultats
         print(f"Titre : {title}")
